@@ -1,0 +1,143 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <title>Grand Menu Service - Home</title>
+    <meta charset="utf-8">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link id="themeCSS" rel="stylesheet" href="CSS/NorthSpiritGBAStyleAndColours.css">
+    <link id="themeCSSAlt" rel="stylesheet" href="CSS/NorthSpiritGBAStyleAndColoursAlt.css" disabled>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+    <!-- Body Start -->
+    <div id="top" class="min-h-screen flex flex-col gms-dark-bg">
+
+        <!-- Header -->
+        <header class="gms-dark-bg gms-light-text p-2 shadow-md">
+            <div class="container mx-auto">
+                <h1 class="gms-title-text lg:text-2xl sm:text-3xl font-bold mb-1 flex items-center justify-center">
+                    The Totally Original Game
+                    <img src="images/TWS_logo.png" alt="Logo" class="
+          hidden
+          md:inline-block 
+          md:h-24 md:w-auto
+          lg:h-32 lg:w-auto
+          mx-2 rounded-full
+        " onerror="this.onerror=null; this.src='https://placehold.co/32x32/ffffff/000000?text=TTOGWLAW';">
+                    With Letters and Words!
+                </h1>
+                <p id="extra" class="text-sm opacity-90 text-center gms-accent-text">
+                    I'm not stealing, I'm just... inspired...
+                </p>
+            </div>
+        </header>
+
+        <!-- Main Menu -->
+        <nav id="menu"
+            class="border-b-4 gms-border-dark uppercase font-bold sticky top-0 z-50 flex flex-col md:flex-row md:justify-center gms-content-bg">
+
+            <!--  Menu Mini-->
+            <div class="md:hidden w-full">
+                <button id="menu-toggle"
+                    class="px-4 py-1 w-full flex items-center justify-between gms-dark-text gms-hover-bg-light rounded">
+                    <div class="flex items-center space-x-2">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                        <span id="menu-text" class="text-base font-bold tracking-wider">Menu</span>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Menu Wide -->
+            <ul id="menu-items" class="
+          hidden md:flex 
+          list-none m-0 w-full 
+          flex-col md:flex-row md:justify-center md:items-stretch
+          text-center
+          ">
+
+                <li class="border gms-border-medium w-full md:flex-1">
+                    <a href="home.html" id="MHome"
+                        class="block py-1 text-center gms-primary-bg gms-light-text mobile-nav-link cursor-default pointer-events-none whitespace-nowrap"
+                        aria-current="page">
+                        Home
+                    </a>
+                </li>
+
+                <li class="border gms-border-medium w-full md:flex-1">
+                    <a href="recipes.html" id="MRecipes"
+                        class="block py-1 text-center gms-content-bg gms-menu-text mobile-nav-link gms-hover-bg-light">4
+                        Letter Words</a>
+                </li>
+                <li class="border gms-border-medium w-full md:flex-1">
+                    <a href="restaurants.html" id="MRestaurants"
+                        class="block py-1 text-center gms-content-bg gms-menu-text mobile-nav-link gms-hover-bg-light whitespace-nowrap">5
+                        Letter Words</a>
+                </li>
+                <li class="border gms-border-medium w-full md:flex-1">
+                    <a href="about.html" id="MAbout"
+                        class="block py-1 text-center gms-content-bg gms-menu-text mobile-nav-link gms-hover-bg-light whitespace-nowrap">6
+                        Letter Words</a>
+                </li>
+                <li class="border gms-border-medium w-full md:flex-1">
+                    <a href="contact.html" id="MContact"
+                        class="block py-1 text-center gms-content-bg gms-menu-text mobile-nav-link gms-hover-bg-light whitespace-nowrap">7
+                        Letter Words</a>
+                </li>
+                <li class="border gms-border-medium w-full md:flex-1">
+                    <a href="#" id="MColour"
+                        class="block py-1 text-center gms-content-bg gms-menu-text mobile-nav-link gms-hover-bg-light whitespace-nowrap">Palette
+                        Swap</a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="flex flex-col md:flex-row flex-1">
+            <main class="flex-1 p-6 gms-content-bg gms-dark-text text-center">
+                <h2 class="text-2xl font-bold mb-4 gms-strong-text border-b-2 gms-border-medium pb-2">
+                    Welcome to the Totally Original Game With Letters and Words!
+                </h2>
+                <p class="gms-main-text mt-4">
+                    Howdy, Partners, <br> Have you ever wanted to play the word game thing again...
+                </p>
+                <p class="gms-main-text mt-4">Well, now hop on and click a mode you wanna play!</p>
+
+                <img src="images/TWS_logo.png" alt="Logo"
+                    class="w-full h-auto mx-auto mt-8 mb-4 sm:max-w-[30%] block max-w-[50%] border-0">
+            </main>
+        </div>
+
+        <footer class="gms-dark-bg gms-light-text p-4 text-center gms-accent-text w-full">
+            <p>&copy; 2026 Mantas K. J. "NorthSpirit" for ya'll. <br> No large newspapers located in huge-arse cities were harmed in making of this parody.</p>
+        </footer>
+
+        <!-- Hamburger -->
+        <script>
+            const menuToggle = document.getElementById('menu-toggle');
+            const menuItems = document.getElementById('menu-items');
+
+            menuToggle.addEventListener('click', () => {
+                menuItems.classList.toggle('hidden');
+            });
+        </script>
+
+        <!-- Alternative colour -->
+        <script>
+            const defaultCSS = document.getElementById('themeCSS');
+            const altCSS = document.getElementById('themeCSSAlt');
+            const paletteMenuLink = document.getElementById('MColour');
+
+            paletteMenuLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                defaultCSS.disabled = !defaultCSS.disabled;
+                altCSS.disabled = !altCSS.disabled;
+            });
+        </script>
+
+</body>
+
+</html>

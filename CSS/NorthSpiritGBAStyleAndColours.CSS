@@ -1,0 +1,105 @@
+/*
+ * =========================================================
+ * Grand Menu Service – Main Colour Scheme CSS
+ * =========================================================
+ */
+
+/* ------------------ Background Colors ------------------ */
+
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+html,
+body {
+    height: 100%;
+    -webkit-font-smoothing: none;
+}
+
+:root {
+    font-family: 'Press Start 2P', cursive;
+    word-spacing: -60%;
+}
+
+a {
+    color: inherit;
+}
+
+.gms-primary-bg {
+    background-color: #5875f8;
+}
+
+.gms-dark-bg {
+    background-color: #57449c;
+}
+
+.gms-content-bg {
+    background-color: #e7f3ff;
+}
+
+/* ------------------ Text Colors ------------------ */
+.gms-light-text {
+    color: #ffffff;
+}
+
+.gms-dark-text {
+    color: #3329c0; 
+}
+
+.gms-menu-text {
+    color: #3329c0; 
+}
+
+.gms-menu-text:hover {
+    color: #45214d; 
+}
+
+.gms-main-text {
+    color: #1b1c70;
+}
+
+.gms-title-text {
+    color: #ff4f4f;
+    text-shadow:
+        1px 1px 0 #45214d,
+        -1px 1px 0 #45214d,
+        1px -1px 0 #45214d,
+        -1px -1px 0 #45214d;
+}
+
+@media (max-width: 640px) {
+    .gms-title-text {
+        color: #ff4f4f;
+        text-shadow: none;
+    }
+}
+
+.gms-accent-text {
+    color: #ccf5ff;
+}
+
+.gms-accent-hover-text {
+    color: #52D332;
+}
+
+.gms-accent-hover-text:hover {
+    color: #064b17;
+}
+
+
+/* ------------------ Hover Backgrounds ------------------ */
+.gms-hover-bg-light:hover {
+    background-color: #ff4f4f;
+}
+
+.gms-primary-hover-bg:hover {
+    background-color: #52D332;
+}
+
+/* ------------------ Borders ------------------ */
+.gms-border-dark {
+    border-color: #57449c;
+}
+
+.gms-border-medium {
+    border-color: #5875f8;
+}
+

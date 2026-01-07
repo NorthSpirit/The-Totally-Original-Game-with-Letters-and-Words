@@ -99,20 +99,15 @@
         <div class="flex flex-col md:flex-row flex-1">
             <main class="flex-1 p-6 gms-content-bg gms-dark-text text-center">
                 <h2 class="text-2xl font-bold mb-4 gms-strong-text border-b-2 gms-border-medium pb-2">
-                    Welcome to the Totally Original Game With Letters and Words!
+                    Guessify the word!
                 </h2>
-                <p class="gms-main-text mt-4">
-                    Howdy, Partners, <br> Have you ever wanted to play the word game thing again...
-                </p>
-                <p class="gms-main-text mt-4">Well, now hop on and click a mode you wanna play!</p>
-                <p class="gms-main-text mt-4">
-                    A slightly more serious note, main seed is based on current date (tho, you can change it manually),
-                    based on UTC+0 time zone, so according to it, it is now:
-                    <span id="display-date" class="font-bold underline text-xl"></span>
-                </p>
-
-                <img src="images/TWS_logo.png" alt="Logo"
-                    class="w-full h-auto mx-auto mt-8 mb-4 sm:max-w-[30%] block max-w-[50%] border-0">
+                <p>Seed is based on the global date, however, if you wanna you can input it here:</p>
+                <div class="GameArea">
+                    <div class="WordArea">
+                        <!-- For 4 letter words, 5 guesses, for 5 word 6 guesses and so on... -->
+                    </div>
+                    <div class="Letter-Button Area"></div>
+                </div>
             </main>
         </div>
 
@@ -143,16 +138,6 @@
                 altCSS.disabled = !altCSS.disabled;
             });
         </script>
-
-        <script src="Datefetcher.js"></script>
-
-        <script>
-            getDailySeed().then(date => {
-                const display = document.getElementById('display-date');
-                if (display) display.textContent = date;
-            });
-        </script>
-
 
 </body>
 

@@ -1,0 +1,71 @@
+let gameSize;
+let gameSeed;
+
+function cyrb128(str) {
+    let h1 = 1779033703, h2 = 2557971541, h3 = 3574430938, h4 = 3926077512;
+    for (let i = 0, k; i < str.length; i++) {
+        k = str.charCodeAt(i);
+        h1 = h2 ^ Math.imul(h1 ^ k, 597399067);
+        h2 = h3 ^ Math.imul(h2 ^ k, 2869860233);
+        h3 = h4 ^ Math.imul(h3 ^ k, 951274213);
+        h4 = h1 ^ Math.imul(h4 ^ k, 2716044179);
+    }
+    return [h1 >>> 0, h2 >>> 0, h3 >>> 0, h4 >>> 0];
+}
+
+async function initializeGame() {
+    const params = new URLSearchParams(window.location.search);
+    gameSize = parseInt(params.get('size')) || 5;
+    let seedParam = params.get('seed');
+
+    const seedInput = document.getElementById('seed-input');
+
+    if (!seedParam || seedParam === 'now') {
+        gameSeed = await getDailySeed(); 
+    } else if (seedParam === 'quick') {
+        // Generates a 7-char random string
+        gameSeed = Math.random().toString(36).substring(2, 9).toUpperCase();
+    } else {
+        gameSeed = seedParam;
+    }
+
+    seedInput.value = gameSeed;
+
+    const numericSeed = cyrb128(gameSeed)[0];
+    console.log(`Playing ${gameSize} letters with seed: ${gameSeed} (Numeric: ${numericSeed})`);
+
+    createGrid();
+}
+
+function createGrid() {
+    const wordArea = document.querySelector('.WordArea');
+    if (!wordArea) return;
+    wordArea.innerHTML = '';
+
+    const attempts = gameSize + 1;
+
+    for (let i = 0; i < attempts; i++) {
+        const row = document.createElement('div');
+        row.className = "flex justify-center gap-1 mb-1";
+        for (let j = 0; j < gameSize; j++) {
+            row.innerHTML += `<div class="w-12 h-12 border-2 gms-border-dark flex items-center justify-center text-2xl font-bold uppercase gms-dark-text"></div>`;
+        }
+        wordArea.appendChild(row);
+    }
+}
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    initializeGame();
+
+    const startBtn = document.getElementById('start-game');
+    const seedInput = document.getElementById('seed-input');
+
+    if (startBtn) {
+        startBtn.addEventListener('click', () => {
+            const newSeed = seedInput.value.trim() || 'now';
+            window.location.href = `game.html?size=${gameSize}&seed=${encodeURIComponent(newSeed)}`;
+        });
+    }
+});

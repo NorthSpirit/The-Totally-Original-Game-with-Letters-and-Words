@@ -102,8 +102,17 @@
                     Guessify the word!
                 </h2>
                 <p>Seed is based on the global date, however, if you wanna you can input it here:</p>
+                <label for="seed-input" class="block font-bold mb-2">Game Seed:</label>
+                <div class="flex justify-center gap-2">
+                    <input type="text" id="seed-input" class="p-2 border gms-border-dark text-black rounded"
+                        placeholder="Loading daily seed...">
+                    <button id="start-game"
+                        class="px-4 py-2 gms-primary-bg gms-light-text font-bold rounded gms-hover-bg-light">
+                        Game Start'o!
+                    </button>
+                </div>
                 <div class="GameArea">
-                    <div class="WordArea">
+                    <div class="WordArea py-8">
                         <!-- For 4 letter words, 5 guesses, for 5 word 6 guesses and so on... -->
                     </div>
                     <div class="Letter-Button Area"></div>
@@ -138,6 +147,9 @@
                 altCSS.disabled = !altCSS.disabled;
             });
         </script>
+
+        <script src="JavaScript/Game.js"></script>
+        <script src="JavaScript/Datefetcher.js"></script>
 
 </body>
 

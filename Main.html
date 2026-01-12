@@ -61,30 +61,29 @@
           ">
 
                 <li class="border gms-border-medium w-full md:flex-1">
-                    <a href="home.html" id="MHome"
-                        class="block py-1 text-center gms-primary-bg gms-light-text mobile-nav-link cursor-default pointer-events-none whitespace-nowrap"
-                        aria-current="page">
+                    <a href="Main.html" id="MHome"
+                        class="block py-1 text-center gms-content-bg gms-menu-text mobile-nav-link gms-hover-bg-light whitespace-nowrap">
                         Home
                     </a>
                 </li>
 
                 <li class="border gms-border-medium w-full md:flex-1">
-                    <a href="Game.html?size=4" id="NSGame4"
+                    <a href="Game.html?size=4&seed=now" id="NSGame4"
                         class="block py-1 text-center gms-content-bg gms-menu-text mobile-nav-link gms-hover-bg-light">4
                         Letter Words</a>
                 </li>
                 <li class="border gms-border-medium w-full md:flex-1">
-                    <a href="Game.html?size=5" id="NSGame5"
+                    <a href="Game.html?size=5&seed=now" id="NSGame5"
                         class="block py-1 text-center gms-content-bg gms-menu-text mobile-nav-link gms-hover-bg-light whitespace-nowrap">5
                         Letter Words</a>
                 </li>
                 <li class="border gms-border-medium w-full md:flex-1">
-                    <a href="Game.html?size=6" id="NSGame6"
+                    <a href="Game.html?size=6&seed=now" id="NSGame6"
                         class="block py-1 text-center gms-content-bg gms-menu-text mobile-nav-link gms-hover-bg-light whitespace-nowrap">6
                         Letter Words</a>
                 </li>
                 <li class="border gms-border-medium w-full md:flex-1">
-                    <a href="Game.html?size=7" id="NSGame7"
+                    <a href="Game.html?size=7&seed=now" id="NSGame7"
                         class="block py-1 text-center gms-content-bg gms-menu-text mobile-nav-link gms-hover-bg-light whitespace-nowrap">7
                         Letter Words</a>
                 </li>
@@ -131,20 +130,9 @@
             });
         </script>
 
-        <!-- Alternative colour -->
-        <script>
-            const defaultCSS = document.getElementById('themeCSS');
-            const altCSS = document.getElementById('themeCSSAlt');
-            const paletteMenuLink = document.getElementById('MColour');
-
-            paletteMenuLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                defaultCSS.disabled = !defaultCSS.disabled;
-                altCSS.disabled = !altCSS.disabled;
-            });
-        </script>
-
         <script src="JavaScript/Datefetcher.js"></script>
+        <script src="JavaScript/Menufix.js"></script>
+        <script src="JavaScript/ColourSwap.js"></script>
 
         <script>
             getDailySeed().then(date => {

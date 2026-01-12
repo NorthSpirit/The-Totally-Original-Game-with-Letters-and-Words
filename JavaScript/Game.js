@@ -1,5 +1,6 @@
 let gameSize;
 let gameSeed;
+let gameWord;
 
 function cyrb128(str) {
     let h1 = 1779033703, h2 = 2557971541, h3 = 3574430938, h4 = 3926077512;
@@ -13,6 +14,29 @@ function cyrb128(str) {
     return [h1 >>> 0, h2 >>> 0, h3 >>> 0, h4 >>> 0];
 }
 
+async function loadWord(gameSize, gameSeed) {
+    try {
+        const filePath = `WordLists/common_${gameSize}_letters.json`;
+        const response = await fetch(filePath);
+        if (!response.ok) throw new Error(`Could not find file: ${filePath}`);
+
+        const wordList = await response.json();
+        const numericSeed = cyrb128(gameSeed)[0];
+        const wordIndex = numericSeed % wordList.length;
+
+        gameWord = wordList[wordIndex].toUpperCase();
+
+        console.log(`Secret word selected: ${gameWord} (Index: ${wordIndex})`);
+        return gameWord;
+
+
+    } catch (error) {
+        console.error("Today is dark day, today is a sad day, because:", error)
+        return null;
+    }
+
+}
+
 async function initializeGame() {
     const params = new URLSearchParams(window.location.search);
     gameSize = parseInt(params.get('size')) || 5;
@@ -21,15 +45,16 @@ async function initializeGame() {
     const seedInput = document.getElementById('seed-input');
 
     if (!seedParam || seedParam === 'now') {
-        gameSeed = await getDailySeed(); 
-    } else if (seedParam === 'quick') {
-        // Generates a 7-char random string
+        gameSeed = await getDailySeed();
+    } else if (seedParam === 'quick' || seedParam === 'random') {
         gameSeed = Math.random().toString(36).substring(2, 9).toUpperCase();
     } else {
         gameSeed = seedParam;
     }
 
     seedInput.value = gameSeed;
+
+    await loadWord(gameSize, gameSeed);
 
     const numericSeed = cyrb128(gameSeed)[0];
     console.log(`Playing ${gameSize} letters with seed: ${gameSeed} (Numeric: ${numericSeed})`);

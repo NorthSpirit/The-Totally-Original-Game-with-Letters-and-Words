@@ -1,4 +1,11 @@
 async function getDailySeed() {
+    const now = new Date();
+    const utcDate = now.toISOString().split('T')[0];
+
+    return utcDate;
+}
+/*
+async function getDailySeed() {
     const sources = [
         'https://worldtimeapi.org/api/timezone/Etc/UTC',
         'https://timeapi.io/api/Time/current/zone?timeZone=UTC',
@@ -28,3 +35,4 @@ async function getDailySeed() {
         return "Error: Could not sync time";
     }
 }
+*/

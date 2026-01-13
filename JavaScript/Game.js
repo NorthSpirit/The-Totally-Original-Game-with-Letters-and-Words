@@ -39,7 +39,10 @@ async function loadWord(gameSize, gameSeed) {
 
 async function initializeGame() {
     const params = new URLSearchParams(window.location.search);
-    gameSize = parseInt(params.get('size')) || 5;
+
+    let requestedSize = parseInt(params.get('size')) || 5;
+    gameSize = Math.max(4, Math.min(requestedSize, 7));
+
     let seedParam = params.get('seed');
 
     const seedInput = document.getElementById('seed-input');
@@ -90,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (startBtn) {
         startBtn.addEventListener('click', () => {
             const newSeed = seedInput.value.trim() || 'now';
-            window.location.href = `game.html?size=${gameSize}&seed=${encodeURIComponent(newSeed)}`;
+            window.location.href = `Game.html?size=${gameSize}&seed=${encodeURIComponent(newSeed)}`;
         });
     }
 });

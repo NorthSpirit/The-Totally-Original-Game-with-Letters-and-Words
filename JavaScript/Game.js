@@ -37,6 +37,41 @@ async function loadWord(gameSize, gameSeed) {
 
 }
 
+function createKeyboard() {
+    const keyboardContainer = document.getElementById('keyboard');
+    if (!keyboardContainer) return;
+
+    const rows = [
+        ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+        ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
+        ['ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'BACK']
+    ];
+
+    keyboardContainer.innerHTML = '';
+
+    rows.forEach(row => {
+        const rowDiv = document.createElement('div');
+        rowDiv.className = "flex justify-center mb-1 gap-1 w-full";
+
+        row.forEach(key => {
+            const btn = document.createElement('button');
+            btn.textContent = key;
+            btn.setAttribute('data-key', key);
+
+            // Special styling for bigger buttons
+            const isSpecial = key === 'ENTER' || key === 'BACK';
+            const widthClass = isSpecial ? 'px-2 sm:px-4 text-xs' : 'w-9 sm:w-12';
+
+            btn.className = `${widthClass} h-14 border-2 gms-border-dark gms-content-bg gms-dark-text font-bold rounded uppercase active:bg-gray-400 transition-colors`;
+
+            btn.addEventListener('click', () => handleInput(key));
+            rowDiv.appendChild(btn);
+        });
+
+        keyboardContainer.appendChild(rowDiv);
+    });
+}
+
 async function initializeGame() {
     const params = new URLSearchParams(window.location.search);
 
@@ -63,6 +98,7 @@ async function initializeGame() {
     console.log(`Playing ${gameSize} letters with seed: ${gameSeed} (Numeric: ${numericSeed})`);
 
     createGrid();
+    createKeyboard();
 }
 
 function createGrid() {

@@ -24,7 +24,7 @@ function cyrb128(str) {
 
 async function loadWord(gameSize, gameSeed) {
     try {
-        const filePath = `WordLists/common_${gameSize}_letters.json`;
+        const filePath = `WordLists/test_${gameSize}_letters.json`;
         const response = await fetch(filePath);
         if (!response.ok) throw new Error(`Could not find file: ${filePath}`);
 
@@ -175,6 +175,7 @@ function updateKeyStatus(letter, status) {
 function submitGuess() {
     if (currentTile !== gameSize) {
         console.log("Word too short!");
+        // Optional: you can shake here too!
         return;
     }
 
@@ -188,8 +189,12 @@ function submitGuess() {
 
     if (!fullWordList.includes(guess)) {
         console.log("Not in word list!");
-        currentRowElement.classList.add('animate-shake'); 
-        setTimeout(() => currentRowElement.classList.remove('animate-shake'), 500);
+        
+        currentRowElement.classList.add('ns-animate-shake'); 
+
+        setTimeout(() => {
+            currentRowElement.classList.remove('ns-animate-shake');
+        }, 1500);
         
         return; 
     }

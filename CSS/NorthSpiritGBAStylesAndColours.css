@@ -41,15 +41,15 @@ a {
 }
 
 .gms-dark-text {
-    color: #3329c0; 
+    color: #3329c0;
 }
 
 .gms-menu-text {
-    color: #3329c0; 
+    color: #3329c0;
 }
 
 .gms-menu-text:hover {
-    color: #45214d; 
+    color: #45214d;
 }
 
 .gms-main-text {
@@ -103,3 +103,66 @@ a {
     border-color: #5875f8;
 }
 
+/* ------------------ Keyframes ------------------ */
+
+@keyframes frostyglow {
+    0% {
+        box-shadow: 0 0 5px #fff, 0 0 10px #7dd3fc;
+        text-shadow: 0 0 5px #fff;
+        transform: scale(1);
+    }
+
+    50% {
+        box-shadow: 0 0 15px #fff, 0 0 25px #0ea5e9, 0 0 35px #7dd3fc;
+        text-shadow: 0 0 10px #fff, 0 0 20px #7dd3fc;
+        transform: scale(1.02);
+    }
+
+    100% {
+        box-shadow: 0 0 5px #fff, 0 0 10px #7dd3fc;
+        text-shadow: 0 0 5px #fff;
+        transform: scale(1);
+    }
+}
+
+@keyframes denyshake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    15% {
+        transform: translateX(-6px);
+    }
+
+    30% {
+        transform: translateX(6px);
+    }
+
+    45% {
+        transform: translateX(-4px);
+    }
+
+    60% {
+        transform: translateX(4px);
+    }
+
+    75% {
+        transform: translateX(-2px);
+    }
+
+    90% {
+        transform: translateX(2px);
+    }
+}
+
+/* ------------------ Animations ------------------ */
+
+.ns-animate-shake {
+    animation: denyshake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+.ns-animate-frost {
+    animation: frostyglow 1.5s ease-in-out infinite;
+}

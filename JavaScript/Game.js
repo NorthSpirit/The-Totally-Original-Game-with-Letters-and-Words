@@ -1,6 +1,14 @@
 let gameSize;
 let gameSeed;
 let gameWord;
+let fullWordList = []
+
+/*-----------------*/
+
+let currentRow = 0;
+let currentTile = 0;
+let guessedLetters = [];
+let gameIsOver = false;
 
 function cyrb128(str) {
     let h1 = 1779033703, h2 = 2557971541, h3 = 3574430938, h4 = 3926077512;
@@ -21,20 +29,19 @@ async function loadWord(gameSize, gameSeed) {
         if (!response.ok) throw new Error(`Could not find file: ${filePath}`);
 
         const wordList = await response.json();
-        const numericSeed = cyrb128(gameSeed)[0];
-        const wordIndex = numericSeed % wordList.length;
+        fullWordList = wordList.map(w => w.toUpperCase());
 
-        gameWord = wordList[wordIndex].toUpperCase();
+        const numericSeed = cyrb128(gameSeed)[0];
+        const wordIndex = numericSeed % fullWordList.length;
+
+        gameWord = fullWordList[wordIndex];
 
         console.log(`Secret word selected: ${gameWord} (Index: ${wordIndex})`);
         return gameWord;
-
-
     } catch (error) {
-        console.error("Today is dark day, today is a sad day, because:", error)
+        console.error("Today is dark day, today is a sad day, because:", error);
         return null;
     }
-
 }
 
 function createKeyboard() {
@@ -118,7 +125,151 @@ function createGrid() {
     }
 }
 
+function handleInput(key) {
+    if (gameIsOver) return;
 
+    const upperKey = key.toUpperCase();
+
+    const isDeadKey = guessedLetters.some(item => item.letter === upperKey && item.status === 'absent');
+    if (isDeadKey) return;
+
+    if (upperKey === 'BACK' || upperKey === 'BACKSPACE') {
+        removeLetter();
+    } else if (upperKey === 'ENTER') {
+        submitGuess();
+    } else if (/^[A-Z]$/.test(upperKey)) {
+        addLetter(upperKey);
+    }
+}
+
+function addLetter(letter) {
+    if (currentTile < gameSize) {
+        const rows = document.querySelector('.WordArea').children;
+        const tile = rows[currentRow].children[currentTile];
+        tile.textContent = letter;
+        tile.classList.add('border-4');
+        currentTile++;
+    }
+}
+
+function removeLetter() {
+    if (currentTile > 0) {
+        currentTile--;
+        const rows = document.querySelector('.WordArea').children;
+        const tile = rows[currentRow].children[currentTile];
+        tile.textContent = '';
+        tile.classList.remove('border-4');
+    }
+}
+
+function updateKeyStatus(letter, status) {
+    const existing = guessedLetters.find(item => item.letter === letter);
+    if (!existing) {
+        guessedLetters.push({ letter, status });
+    } else {
+        if (status === 'correct') existing.status = 'correct';
+        if (status === 'present' && existing.status === 'absent') existing.status = 'present';
+    }
+}
+
+function submitGuess() {
+    if (currentTile !== gameSize) {
+        console.log("Word too short!");
+        return;
+    }
+
+    const rows = document.querySelector('.WordArea').children;
+    const currentRowElement = rows[currentRow];
+
+    let guess = "";
+    for (let tile of currentRowElement.children) {
+        guess += tile.textContent;
+    }
+
+    if (!fullWordList.includes(guess)) {
+        console.log("Not in word list!");
+        currentRowElement.classList.add('animate-shake'); 
+        setTimeout(() => currentRowElement.classList.remove('animate-shake'), 500);
+        
+        return; 
+    }
+    // ----------------------------
+
+    checkGuess(guess, currentRowElement);
+    updateKeyboardUI();
+
+    if (guess === gameWord) {
+        gameIsOver = true;
+        setTimeout(() => alert("You got it! The word was " + gameWord), 100);
+    } else if (currentRow === gameSize) { 
+        gameIsOver = true;
+        setTimeout(() => alert("Game Over! The word was " + gameWord), 100);
+    } else {
+        currentRow++;
+        currentTile = 0;
+    }
+}
+
+function checkGuess(guess, rowElement) {
+    const wordArr = gameWord.split('');
+    const guessArr = guess.split('');
+    const status = new Array(gameSize).fill('absent');
+
+    guessArr.forEach((letter, i) => {
+        if (letter === wordArr[i]) {
+            status[i] = 'correct';
+            wordArr[i] = null;
+        }
+    });
+
+    guessArr.forEach((letter, i) => {
+        if (status[i] !== 'correct' && wordArr.includes(letter)) {
+            status[i] = 'present';
+            wordArr[wordArr.indexOf(letter)] = null;
+        }
+    });
+
+    Array.from(rowElement.children).forEach((tile, i) => {
+        const letter = guessArr[i];
+
+        tile.classList.remove('gms-dark-text', 'gms-border-dark');
+
+        if (status[i] === 'correct') {
+            tile.classList.add('bg-green-600', 'text-white', 'border-green-700');
+        } else if (status[i] === 'present') {
+            tile.classList.add('bg-yellow-500', 'text-white', 'border-yellow-600');
+        } else {
+            tile.classList.add('bg-gray-600', 'text-white', 'border-gray-700');
+        }
+
+        updateKeyStatus(letter, status[i]);
+    });
+}
+
+function updateKeyboardUI() {
+    guessedLetters.forEach(item => {
+        const keyBtn = document.querySelector(`button[data-key="${item.letter}"]`);
+        if (!keyBtn) return;
+
+        keyBtn.classList.remove('gms-content-bg', 'gms-dark-text');
+
+        if (item.status === 'correct') {
+            keyBtn.classList.add('bg-green-600', 'text-white');
+            keyBtn.classList.remove('bg-yellow-500', 'bg-gray-600');
+        } else if (item.status === 'present') {
+            if (!keyBtn.classList.contains('bg-green-600')) {
+                keyBtn.classList.add('bg-yellow-500', 'text-white');
+                keyBtn.classList.remove('bg-gray-600');
+            }
+        } else if (item.status === 'absent') {
+            if (!keyBtn.classList.contains('bg-green-600') && !keyBtn.classList.contains('bg-yellow-500')) {
+                keyBtn.classList.add('bg-gray-600', 'text-white', 'opacity-50', 'pointer-events-none');
+                // Optional: set disabled attribute to be extra safe
+                keyBtn.disabled = true;
+            }
+        }
+    });
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     initializeGame();

@@ -234,17 +234,17 @@ function checkGuess(guess, rowElement) {
         }
     });
 
-    Array.from(rowElement.children).forEach((tile, i) => {
+Array.from(rowElement.children).forEach((tile, i) => {
         const letter = guessArr[i];
 
         tile.classList.remove('gms-dark-text', 'gms-border-dark');
 
         if (status[i] === 'correct') {
-            tile.classList.add('bg-green-600', 'text-white', 'border-green-700');
+            tile.classList.add('ns-matched-letter');
         } else if (status[i] === 'present') {
-            tile.classList.add('bg-yellow-500', 'text-white', 'border-yellow-600');
+            tile.classList.add('ns-existing-letter');
         } else {
-            tile.classList.add('bg-gray-600', 'text-white', 'border-gray-700');
+            tile.classList.add('ns-disabled-letter', 'text-white');
         }
 
         updateKeyStatus(letter, status[i]);
@@ -259,17 +259,16 @@ function updateKeyboardUI() {
         keyBtn.classList.remove('gms-content-bg', 'gms-dark-text');
 
         if (item.status === 'correct') {
-            keyBtn.classList.add('bg-green-600', 'text-white');
-            keyBtn.classList.remove('bg-yellow-500', 'bg-gray-600');
+            keyBtn.classList.add('ns-matched-letter');
+            keyBtn.classList.remove('ns-existing-letter', 'ns-disabled-letter');
         } else if (item.status === 'present') {
-            if (!keyBtn.classList.contains('bg-green-600')) {
-                keyBtn.classList.add('bg-yellow-500', 'text-white');
-                keyBtn.classList.remove('bg-gray-600');
+            if (!keyBtn.classList.contains('ns-matched-letter')) {
+                keyBtn.classList.add('ns-existing-letter');
+                keyBtn.classList.remove('ns-disabled-letter');
             }
         } else if (item.status === 'absent') {
-            if (!keyBtn.classList.contains('bg-green-600') && !keyBtn.classList.contains('bg-yellow-500')) {
-                keyBtn.classList.add('bg-gray-600', 'text-white', 'opacity-50', 'pointer-events-none');
-                // Optional: set disabled attribute to be extra safe
+            if (!keyBtn.classList.contains('ns-matched-letter') && !keyBtn.classList.contains('ns-existing-letter')) {
+                keyBtn.classList.add('ns-disabled-letter', 'text-white', 'opacity-50', 'pointer-events-none');
                 keyBtn.disabled = true;
             }
         }

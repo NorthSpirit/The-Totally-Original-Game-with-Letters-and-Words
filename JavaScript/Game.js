@@ -65,7 +65,6 @@ function createKeyboard() {
             btn.textContent = key;
             btn.setAttribute('data-key', key);
 
-            // Special styling for bigger buttons
             const isSpecial = key === 'ENTER' || key === 'BACK';
             const widthClass = isSpecial ? 'px-2 sm:px-4 text-xs' : 'w-9 sm:w-12';
 
@@ -113,7 +112,7 @@ function createGrid() {
     if (!wordArea) return;
     wordArea.innerHTML = '';
 
-    const attempts = gameSize + 1;
+    const attempts = (gameSize === 4) ? 6 : (gameSize + 1);
 
     for (let i = 0; i < attempts; i++) {
         const row = document.createElement('div');
@@ -129,9 +128,6 @@ function handleInput(key) {
     if (gameIsOver) return;
 
     const upperKey = key.toUpperCase();
-
-    const isDeadKey = guessedLetters.some(item => item.letter === upperKey && item.status === 'absent');
-    if (isDeadKey) return;
 
     if (upperKey === 'BACK' || upperKey === 'BACKSPACE') {
         removeLetter();
@@ -172,10 +168,25 @@ function updateKeyStatus(letter, status) {
     }
 }
 
+function showEndScreen(isWin) {
+    const modal = document.getElementById('game-modal');
+    const title = document.getElementById('modal-title');
+    const message = document.getElementById('modal-message');
+
+    title.textContent = isWin ? "Wintory!" : "Disgraceful!";
+    message.textContent = isWin
+        ? `The word was ${gameWord}. You found it in ${currentRow + 1} tries!`
+        : `KEK! The word was ${gameWord}. Better luck next time!`;
+
+    modal.classList.remove('hidden');
+
+    document.getElementById('share-button').onclick = () => shareResults();
+    document.getElementById('close-modal').onclick = () => modal.classList.add('hidden');
+}
+
 function submitGuess() {
     if (currentTile !== gameSize) {
         console.log("Word too short!");
-        // Optional: you can shake here too!
         return;
     }
 
@@ -189,26 +200,28 @@ function submitGuess() {
 
     if (!fullWordList.includes(guess)) {
         console.log("Not in word list!");
-        
-        currentRowElement.classList.add('ns-animate-shake'); 
+
+        currentRowElement.classList.add('ns-animate-shake');
 
         setTimeout(() => {
             currentRowElement.classList.remove('ns-animate-shake');
         }, 1500);
-        
-        return; 
+
+        return;
     }
     // ----------------------------
 
     checkGuess(guess, currentRowElement);
     updateKeyboardUI();
 
+    const totalAttempts = (gameSize === 4) ? 6 : (gameSize + 1);
+
     if (guess === gameWord) {
         gameIsOver = true;
-        setTimeout(() => alert("You got it! The word was " + gameWord), 100);
-    } else if (currentRow === gameSize) { 
+        setTimeout(() => showEndScreen(true), 100);
+    } else if (currentRow === totalAttempts - 1) {
         gameIsOver = true;
-        setTimeout(() => alert("Game Over! The word was " + gameWord), 100);
+        setTimeout(() => showEndScreen(false), 100);
     } else {
         currentRow++;
         currentTile = 0;
@@ -234,7 +247,7 @@ function checkGuess(guess, rowElement) {
         }
     });
 
-Array.from(rowElement.children).forEach((tile, i) => {
+    Array.from(rowElement.children).forEach((tile, i) => {
         const letter = guessArr[i];
 
         tile.classList.remove('gms-dark-text', 'gms-border-dark');
@@ -268,23 +281,71 @@ function updateKeyboardUI() {
             }
         } else if (item.status === 'absent') {
             if (!keyBtn.classList.contains('ns-matched-letter') && !keyBtn.classList.contains('ns-existing-letter')) {
-                keyBtn.classList.add('ns-disabled-letter', 'text-white', 'opacity-50', 'pointer-events-none');
-                keyBtn.disabled = true;
+                keyBtn.classList.add('ns-disabled-letter', 'text-white');
             }
         }
     });
+}
+
+function shareResults() {
+    const rows = document.querySelector('.WordArea').children;
+    const totalAttempts = (gameSize === 4) ? 6 : (gameSize + 1);
+    // Format: TTOGWLAW [Seed] [Tries]/[Max Tries]
+    let emojiGrid = `TTOGWLAW - Seed: ${gameSeed} (${currentRow + 1}/${totalAttempts})\n\n`;
+
+    for (let i = 0; i <= currentRow; i++) {
+        const tiles = rows[i].children;
+        let rowEmojis = "";
+
+        for (let tile of tiles) {
+            if (tile.classList.contains('ns-matched-letter')) {
+                rowEmojis += "🟩";
+            } else if (tile.classList.contains('ns-existing-letter')) {
+                rowEmojis += "🟨";
+            } else {
+                rowEmojis += "⬛";
+            }
+        }
+        emojiGrid += rowEmojis + "\n";
+    }
+
+    // Attempt to copy
+    if (navigator.share) {
+        navigator.share({
+            text: emojiGrid
+        }).catch(err => console.log("Share cancelled"));
+    } else {
+        navigator.clipboard.writeText(emojiGrid).then(() => {
+            const btn = document.getElementById('share-button');
+            const originalText = btn.textContent;
+            btn.textContent = "COPIED! ✅";
+            btn.classList.replace('gms-primary-bg', 'ns-matched-letter');
+
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.classList.replace('ns-matched-letter', 'gms-primary-bg');
+            }, 2000);
+        });
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     initializeGame();
 
     const startBtn = document.getElementById('start-game');
+    const randomBtn = document.getElementById('random-game');
     const seedInput = document.getElementById('seed-input');
 
     if (startBtn) {
         startBtn.addEventListener('click', () => {
             const newSeed = seedInput.value.trim() || 'now';
             window.location.href = `Game.html?size=${gameSize}&seed=${encodeURIComponent(newSeed)}`;
+        });
+    }
+
+    if (randomBtn) {
+        randomBtn.addEventListener('click', () => {
+            window.location.href = `Game.html?size=${gameSize}&seed=random`;
         });
     }
 });

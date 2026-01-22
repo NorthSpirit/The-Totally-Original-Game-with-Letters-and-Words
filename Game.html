@@ -101,17 +101,21 @@
                 <h2 class="text-2xl font-bold mb-4 gms-strong-text border-b-2 gms-border-medium pb-2">
                     Guessify the word!
                 </h2>
-                <div class="flex flex-row items-center justify-center gap-3 mb-6">
-                    <label for="seed-input" class="font-bold whitespace-nowrap">Game Seed:</label>
-                    <input type="text" id="seed-input" class="p-2 border gms-border-dark text-black rounded w-40"
-                        placeholder="Loading...">
+                <label for="seed-input" class="font-bold whitespace-nowrap">Game Seed:</label>
+                <input type="text" id="seed-input" class="p-2 border gms-border-dark text-black rounded"
+                    placeholder="Loading...">
+                <div class="flex flex-row items-center justify-center gap-3 mt-4 mb-2">
                     <button id="start-game"
                         class="px-4 py-2 gms-primary-bg gms-light-text font-bold rounded gms-hover-bg-light">
                         Restart'o!
                     </button>
+                    <button id="random-game"
+                        class="px-4 py-2 gms-primary-bg gms-light-text font-bold rounded gms-hover-bg-light">
+                        Randomly!
+                    </button>
                 </div>
                 <div class="GameArea">
-                    <div class="WordArea py-8">
+                    <div class="WordArea py-2">
                     </div>
                     <div class="Letter-Button Area"></div>
                 </div>
@@ -148,6 +152,27 @@
         <script src="JavaScript/Datefetcher.js"></script>
         <script src="JavaScript/Menufix.js"></script>
         <script src="JavaScript/ColourSwap.js"></script>
+
+
+        <div id="game-modal"
+            class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+            <div
+                class="gms-content-bg border-4 gms-border-dark p-6 rounded-none shadow-[8px_8px_0px_0px_rgba(87,68,156,1)] max-w-sm w-full text-center">
+                <h2 id="modal-title" class="gms-title-text text-2xl font-bold mb-4 uppercase">Victory!</h2>
+                <p id="modal-message" class="gms-main-text mb-6 font-bold"></p>
+
+                <div class="flex flex-col gap-3">
+                    <button id="share-button"
+                        class="w-full py-3 gms-primary-bg gms-light-text font-bold rounded uppercase gms-hover-bg-light transition-all active:scale-95">
+                        Share Results
+                    </button>
+                    <button id="close-modal"
+                        class="w-full py-2 gms-dark-bg gms-light-text font-bold rounded uppercase opacity-80 hover:opacity-100 transition-all">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
 
 </body>
 

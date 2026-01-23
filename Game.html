@@ -102,15 +102,15 @@
                     Guessify the word!
                 </h2>
                 <label for="seed-input" class="font-bold whitespace-nowrap">Game Seed:</label>
-                <input type="text" id="seed-input" class="p-2 border gms-border-dark text-black rounded"
-                    placeholder="Loading...">
-                <div class="flex flex-row items-center justify-center gap-3 mt-4 mb-2">
+                <input type="text" id="seed-input" class="w-full max-w-xs p-2 border gms-border-dark text-black rounded"
+                    placeholder="Seed...">
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-4 mb-2 px-4">
                     <button id="start-game"
-                        class="px-4 py-2 gms-primary-bg gms-light-text font-bold rounded gms-hover-bg-light">
-                        Restart'o!
+                        class="w-full sm:w-auto px-6 py-3 gms-primary-bg gms-light-text font-bold rounded gms-hover-bg-light whitespace-nowrap">
+                        Seed 'n Go!
                     </button>
                     <button id="random-game"
-                        class="px-4 py-2 gms-primary-bg gms-light-text font-bold rounded gms-hover-bg-light">
+                        class="w-full sm:w-auto px-6 py-3 gms-primary-bg gms-light-text font-bold rounded gms-hover-bg-light whitespace-nowrap">
                         Randomly!
                     </button>
                 </div>
@@ -120,7 +120,7 @@
                     <div class="Letter-Button Area"></div>
                 </div>
 
-                <div id="keyboard" class="mt-8 pb-4 w-full max-w-2xl mx-auto px-2">
+                <div id="keyboard" class="mt-2 pb-2 w-full max-w-2xl mx-auto px-2">
                     <div class="flex justify-center mb-2 gap-1 touch-none">
                         <button
                             class="kbd-key w-10 h-14 sm:w-12 sm:h-16 border-2 gms-border-dark gms-content-bg gms-dark-text font-bold rounded uppercase active:opacity-50"
@@ -167,7 +167,7 @@
                         Share Results
                     </button>
                     <button id="close-modal"
-                        class="w-full py-2 gms-dark-bg gms-light-text font-bold rounded uppercase opacity-80 hover:opacity-100 transition-all">
+                        class="w-full py-2 gms-dark-bg gms-light-text font-bold rounded uppercase ns-hover-bg-dark transition-all">
                         Close
                     </button>
                 </div>

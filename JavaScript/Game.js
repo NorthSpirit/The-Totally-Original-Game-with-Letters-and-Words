@@ -68,7 +68,7 @@ function createKeyboard() {
             const isSpecial = key === 'ENTER' || key === 'BACK';
             const widthClass = isSpecial ? 'px-2 sm:px-4 text-xs' : 'w-9 sm:w-12';
 
-            btn.className = `${widthClass} h-14 border-2 gms-border-dark gms-content-bg gms-dark-text font-bold rounded uppercase active:bg-gray-400 transition-colors`;
+            btn.className = `${widthClass} h-14 border-2 gms-border-dark gms-content-bg gms-dark-text font-bold rounded uppercase transition-colors`;
 
             btn.addEventListener('click', () => handleInput(key));
             rowDiv.appendChild(btn);
@@ -143,7 +143,7 @@ function addLetter(letter) {
         const rows = document.querySelector('.WordArea').children;
         const tile = rows[currentRow].children[currentTile];
         tile.textContent = letter;
-        tile.classList.add('border-4');
+        tile.classList.add('ns-tile-input');
         currentTile++;
     }
 }
@@ -154,7 +154,7 @@ function removeLetter() {
         const rows = document.querySelector('.WordArea').children;
         const tile = rows[currentRow].children[currentTile];
         tile.textContent = '';
-        tile.classList.remove('border-4');
+        tile.classList.remove('ns-tile-input');
     }
 }
 
@@ -257,7 +257,7 @@ function checkGuess(guess, rowElement) {
         } else if (status[i] === 'present') {
             tile.classList.add('ns-existing-letter');
         } else {
-            tile.classList.add('ns-disabled-letter', 'text-white');
+            tile.classList.add('ns-disabled-letter', 'ns-text-white'); // Replaced 'text-white'
         }
 
         updateKeyStatus(letter, status[i]);
@@ -273,15 +273,15 @@ function updateKeyboardUI() {
 
         if (item.status === 'correct') {
             keyBtn.classList.add('ns-matched-letter');
-            keyBtn.classList.remove('ns-existing-letter', 'ns-disabled-letter');
+            keyBtn.classList.remove('ns-existing-letter', 'ns-disabled-letter', 'ns-text-white');
         } else if (item.status === 'present') {
             if (!keyBtn.classList.contains('ns-matched-letter')) {
                 keyBtn.classList.add('ns-existing-letter');
-                keyBtn.classList.remove('ns-disabled-letter');
+                keyBtn.classList.remove('ns-disabled-letter', 'ns-text-white');
             }
         } else if (item.status === 'absent') {
             if (!keyBtn.classList.contains('ns-matched-letter') && !keyBtn.classList.contains('ns-existing-letter')) {
-                keyBtn.classList.add('ns-disabled-letter', 'text-white');
+                keyBtn.classList.add('ns-disabled-letter', 'ns-text-white');
             }
         }
     });
@@ -335,6 +335,7 @@ document.addEventListener('keydown', (e) => {
     let key = e.key.toUpperCase();
 
     if (key === 'BACKSPACE') key = 'BACK';
+
 
     handleInput(key);
 

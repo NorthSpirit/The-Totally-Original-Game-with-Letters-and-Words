@@ -35,12 +35,22 @@ a {
     background-color: #e7f3ff;
 }
 
-/* ------------------ Letter Boxes ------------------ */
+/* ------------------ Letter Boxes and keys ------------------ */
+
+.ns-key {
+    border-width: 4px;
+    border-style: solid;
+}
+
+.ns-key:active {
+    background-color: #cbd5e1;
+    transform: scale(0.95);
+}
 
 .ns-disabled-letter {
     background-color: #d38080;
     border-color: #57449c;
-    color:#ffffff
+    color:#ffffff;
 }
 
 .ns-existing-letter {
@@ -52,7 +62,19 @@ a {
 .ns-matched-letter {
     background-color: #9ef051;
     border-color: #1b1c70;
-    color:#1b1c70
+    color:#1b1c70;
+}
+
+.ns-text-white {
+    color: #ffffff;
+}
+
+.ns-text-black {
+    color: #000000;
+}
+
+.ns-tile-input {
+    border-width: 4px;
 }
 
 
@@ -110,6 +132,10 @@ a {
 /* ------------------ Hover Backgrounds ------------------ */
 .gms-hover-bg-light:hover {
     background-color: #ff4f4f;
+}
+
+.ns-hover-bg-dark:hover {
+    background-color: #43337D;
 }
 
 .gms-primary-hover-bg:hover {

@@ -66,7 +66,7 @@ function createKeyboard() {
             btn.setAttribute('data-key', key);
 
             const isSpecial = key === 'ENTER' || key === 'BACK';
-            const widthClass = isSpecial ? 'px-2 sm:px-4 text-xs' : 'w-9 sm:w-12';
+            const widthClass = isSpecial ? 'px-2 sm:px-4 text-xs' : 'w-10 h-12 sm:w-12 sm:h-14';
 
             btn.className = `${widthClass} h-14 border-2 gms-border-dark gms-content-bg gms-dark-text font-bold rounded uppercase transition-colors`;
 

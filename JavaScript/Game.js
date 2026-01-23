@@ -299,7 +299,6 @@ function updateKeyboardUI() {
 function shareResults() {
     const rows = document.querySelector('.WordArea').children;
     const totalAttempts = (gameSize === 4) ? 6 : (gameSize + 1);
-    // Format: TTOGWLAW [Seed] [Tries]/[Max Tries]
     let emojiGrid = `TTOGWLAW - Seed: ${gameSeed} (${currentRow + 1}/${totalAttempts})\n\n`;
 
     for (let i = 0; i <= currentRow; i++) {
@@ -318,12 +317,15 @@ function shareResults() {
         emojiGrid += rowEmojis + "\n";
     }
 
-    // Attempt to copy
-    if (navigator.share) {
+    // This check ensures PC users (Chrome/Edge/Safari) don't get the popup
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+    if (isMobile && navigator.share) {
         navigator.share({
             text: emojiGrid
         }).catch(err => console.log("Share cancelled"));
     } else {
+        // Desktop or non-sharing mobile browser
         navigator.clipboard.writeText(emojiGrid).then(() => {
             const btn = document.getElementById('share-button');
             const originalText = btn.textContent;
@@ -334,6 +336,8 @@ function shareResults() {
                 btn.textContent = originalText;
                 btn.classList.replace('ns-matched-letter', 'gms-primary-bg');
             }, 2000);
+        }).catch(err => {
+            console.error("Clipboard failed", err);
         });
     }
 }

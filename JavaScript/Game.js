@@ -47,35 +47,44 @@ async function loadWord(gameSize, gameSeed) {
 function createKeyboard() {
     const keyboardContainer = document.getElementById('keyboard');
     if (!keyboardContainer) return;
-
-    const rows = [
-        ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
-        ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
-        ['ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'BACK']
-    ];
-
     keyboardContainer.innerHTML = '';
 
-    rows.forEach(row => {
+    const topRows = [
+        ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+        ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L']
+    ];
+
+    const desktopRow3 = ['ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'BACK'];
+
+    const mobileRow3 = ['Z', 'X', 'C', 'V', 'B', 'N', 'M'];
+    const mobileRow4 = ['ENTER', 'BACK'];
+
+    const buildRow = (keys, extraClasses = "") => {
         const rowDiv = document.createElement('div');
-        rowDiv.className = "flex justify-center mb-1 gap-1 w-full";
-
-        row.forEach(key => {
+        rowDiv.className = `flex justify-center mb-1 gap-1 w-full ${extraClasses}`;
+        keys.forEach(key => {
             const btn = document.createElement('button');
-            btn.textContent = key;
-            btn.setAttribute('data-key', key);
-
             const isSpecial = key === 'ENTER' || key === 'BACK';
-            const widthClass = isSpecial ? 'px-2 sm:px-4 text-xs' : 'w-10 h-12 sm:w-12 sm:h-14';
 
+            btn.setAttribute('data-key', key);
+            btn.textContent = key;
+
+            const widthClass = isSpecial ? 'px-2 sm:px-6 flex-1 max-w-[120px]' : 'w-10 h-12 sm:w-12 sm:h-14';
             btn.className = `${widthClass} h-14 border-2 gms-border-dark gms-content-bg gms-dark-text font-bold rounded uppercase transition-colors`;
 
             btn.addEventListener('click', () => handleInput(key));
             rowDiv.appendChild(btn);
         });
+        return rowDiv;
+    };
 
-        keyboardContainer.appendChild(rowDiv);
-    });
+    topRows.forEach(keys => keyboardContainer.appendChild(buildRow(keys)));
+
+    keyboardContainer.appendChild(buildRow(desktopRow3, "hidden md:flex"));
+
+    keyboardContainer.appendChild(buildRow(mobileRow3, "flex md:hidden"));
+
+    keyboardContainer.appendChild(buildRow(mobileRow4, "flex md:hidden"));
 }
 
 async function initializeGame() {

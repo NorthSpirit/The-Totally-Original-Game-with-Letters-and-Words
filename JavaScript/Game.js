@@ -329,6 +329,24 @@ function shareResults() {
     }
 }
 
+document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+    let key = e.key.toUpperCase();
+
+    if (key === 'BACKSPACE') key = 'BACK';
+
+    handleInput(key);
+
+    const visualKey = document.querySelector(`button[data-key="${key}"]`);
+    if (visualKey) {
+        visualKey.classList.add('opacity-50', 'scale-95');
+        setTimeout(() => {
+            visualKey.classList.remove('opacity-50', 'scale-95');
+        }, 100);
+    }
+});
+
 document.addEventListener('DOMContentLoaded', () => {
     initializeGame();
 

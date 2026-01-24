@@ -2,6 +2,8 @@ let gameSize;
 let gameSeed;
 let gameWord;
 let fullWordList = []
+let isNovomod = false;
+const VOWELS = ['A', 'E', 'I', 'O', 'U'];
 
 /*-----------------*/
 
@@ -91,7 +93,9 @@ async function initializeGame() {
     const params = new URLSearchParams(window.location.search);
 
     let requestedSize = parseInt(params.get('size')) || 5;
-    gameSize = Math.max(4, Math.min(requestedSize, 7));
+    gameSize = Math.max(4, Math.min(requestedSize, 8));
+
+    isNovomod = (gameSize === 8);
 
     let seedParam = params.get('seed');
 
@@ -258,18 +262,21 @@ function checkGuess(guess, rowElement) {
 
     Array.from(rowElement.children).forEach((tile, i) => {
         const letter = guessArr[i];
-
         tile.classList.remove('gms-dark-text', 'gms-border-dark');
 
-        if (status[i] === 'correct') {
-            tile.classList.add('ns-matched-letter');
-        } else if (status[i] === 'present') {
-            tile.classList.add('ns-existing-letter');
+        if (isNovomod && VOWELS.includes(letter)) {
+            tile.classList.add('ns-novo-letter');
+            updateKeyStatus(letter, 'novo');
         } else {
-            tile.classList.add('ns-disabled-letter', 'ns-text-white'); // Replaced 'text-white'
+            if (status[i] === 'correct') {
+                tile.classList.add('ns-matched-letter');
+            } else if (status[i] === 'present') {
+                tile.classList.add('ns-existing-letter');
+            } else {
+                tile.classList.add('ns-disabled-letter', 'ns-text-white');
+            }
+            updateKeyStatus(letter, status[i]);
         }
-
-        updateKeyStatus(letter, status[i]);
     });
 }
 
@@ -277,6 +284,11 @@ function updateKeyboardUI() {
     guessedLetters.forEach(item => {
         const keyBtn = document.querySelector(`button[data-key="${item.letter}"]`);
         if (!keyBtn) return;
+
+        if (isNovomod && VOWELS.includes(item.letter)) {
+            keyBtn.classList.add('ns-novo-letter');
+            return;
+        }
 
         keyBtn.classList.remove('gms-content-bg', 'gms-dark-text');
 
@@ -306,7 +318,9 @@ function shareResults() {
         let rowEmojis = "";
 
         for (let tile of tiles) {
-            if (tile.classList.contains('ns-matched-letter')) {
+            if (tile.classList.contains('ns-novo-letter')) {
+                rowEmojis += "🟦";
+            } else if (tile.classList.contains('ns-matched-letter')) {
                 rowEmojis += "🟩";
             } else if (tile.classList.contains('ns-existing-letter')) {
                 rowEmojis += "🟨";

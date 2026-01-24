@@ -9,6 +9,7 @@ function fixMenuNavigation() {
         "5": document.getElementById('NSGame5'),
         "6": document.getElementById('NSGame6'),
         "7": document.getElementById('NSGame7'),
+        "8": document.getElementById('NSGame8'),
         "home": document.getElementById('MHome')
     };
 

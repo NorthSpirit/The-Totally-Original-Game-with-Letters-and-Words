@@ -254,7 +254,7 @@ function checkGuess(guess, rowElement) {
     });
 
     guessArr.forEach((letter, i) => {
-        if (status[i] !== 'correct' && wordArr.includes(letter)) {
+        if (status[i] !== 'correct' && !VOWELS.includes(letter) && wordArr.includes(letter)) {
             status[i] = 'present';
             wordArr[wordArr.indexOf(letter)] = null;
         }
@@ -265,8 +265,13 @@ function checkGuess(guess, rowElement) {
         tile.classList.remove('gms-dark-text', 'gms-border-dark');
 
         if (isNovomod && VOWELS.includes(letter)) {
-            tile.classList.add('ns-novo-letter');
-            updateKeyStatus(letter, 'novo');
+            if (status[i] === 'correct') {
+                tile.classList.add('ns-novo-correct-letter');
+                updateKeyStatus(letter, 'correct');
+            } else {
+                tile.classList.add('ns-novo-letter');
+                updateKeyStatus(letter, 'novo');
+            }
         } else {
             if (status[i] === 'correct') {
                 tile.classList.add('ns-matched-letter');
@@ -310,7 +315,7 @@ function updateKeyboardUI() {
 
 function shareResults() {
     const rows = document.querySelector('.WordArea').children;
-    const totalAttempts = (gameSize === 4) ? 6 : (gameSize + 1);
+    const totalAttempts = (gameSize === 8) ? 8 : (gameSize === 4 ? 6 : gameSize + 1);
     let emojiGrid = `TTOGWLAW - Seed: ${gameSeed} (${currentRow + 1}/${totalAttempts})\n\n`;
 
     for (let i = 0; i <= currentRow; i++) {
@@ -318,20 +323,30 @@ function shareResults() {
         let rowEmojis = "";
 
         for (let tile of tiles) {
-            if (tile.classList.contains('ns-novo-letter')) {
+            // Priority 1: Correct Vowel (Purple)
+            if (tile.classList.contains('ns-novo-correct-letter')) {
+                rowEmojis += "🟪";
+            } 
+            // Priority 2: Generic Vowel (Blue)
+            else if (tile.classList.contains('ns-novo-letter')) {
                 rowEmojis += "🟦";
-            } else if (tile.classList.contains('ns-matched-letter')) {
+            } 
+            // Priority 3: Correct Consonant (Green)
+            else if (tile.classList.contains('ns-matched-letter')) {
                 rowEmojis += "🟩";
-            } else if (tile.classList.contains('ns-existing-letter')) {
+            } 
+            // Priority 4: Existing Consonant (Yellow)
+            else if (tile.classList.contains('ns-existing-letter')) {
                 rowEmojis += "🟨";
-            } else {
+            } 
+            // Priority 5: Absent / Wrong (Black)
+            else {
                 rowEmojis += "⬛";
             }
         }
         emojiGrid += rowEmojis + "\n";
     }
 
-    // This check ensures PC users (Chrome/Edge/Safari) don't get the popup
     const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
     if (isMobile && navigator.share) {
@@ -339,16 +354,16 @@ function shareResults() {
             text: emojiGrid
         }).catch(err => console.log("Share cancelled"));
     } else {
-        // Desktop or non-sharing mobile browser
         navigator.clipboard.writeText(emojiGrid).then(() => {
             const btn = document.getElementById('share-button');
             const originalText = btn.textContent;
             btn.textContent = "COPIED! ✅";
-            btn.classList.replace('gms-primary-bg', 'ns-matched-letter');
+            const feedbackClass = isNovomod ? 'ns-novo-correct-letter' : 'ns-matched-letter';
+            btn.classList.replace('gms-primary-bg', feedbackClass);
 
             setTimeout(() => {
                 btn.textContent = originalText;
-                btn.classList.replace('ns-matched-letter', 'gms-primary-bg');
+                btn.classList.replace(feedbackClass, 'gms-primary-bg');
             }, 2000);
         }).catch(err => {
             console.error("Clipboard failed", err);

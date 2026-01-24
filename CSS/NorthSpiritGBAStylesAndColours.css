@@ -50,25 +50,31 @@ a {
 .ns-disabled-letter {
     background-color: #d38080;
     border-color: #57449c;
-    color:#ffffff;
+    color: #ffffff;
 }
 
 .ns-existing-letter {
     background-color: #f5e174;
     border-color: #1b1c70;
-    color:#1b1c70;
+    color: #1b1c70;
 }
 
 .ns-matched-letter {
     background-color: #9ef051;
     border-color: #1b1c70;
-    color:#1b1c70;
+    color: #1b1c70;
 }
 
 .ns-novo-letter {
     background-color: #51ddf0;
     border-color: #1b1c70;
-    color:#1b1c70;
+    color: #1b1c70;
+}
+
+.ns-novo-correct-letter {
+    background-color: #1b1c70;
+    border-color: #51ddf0;
+    color: #51ddf0;
 }
 
 .ns-text-white {
@@ -215,7 +221,7 @@ a {
 /* ------------------ Animations ------------------ */
 
 .ns-animate-shake {
-    animation: denyshake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+    animation: denyshake 0.5s cubic-bezier(.36, .07, .19, .97) both;
 }
 
 .ns-animate-frost {

@@ -246,6 +246,7 @@ function checkGuess(guess, rowElement) {
     const guessArr = guess.split('');
     const status = new Array(gameSize).fill('absent');
 
+    // 1. Pass: Identify Exact Matches (Green logic)
     guessArr.forEach((letter, i) => {
         if (letter === wordArr[i]) {
             status[i] = 'correct';
@@ -253,18 +254,26 @@ function checkGuess(guess, rowElement) {
         }
     });
 
+    // 2. Pass: Identify Present Letters (Yellow logic)
     guessArr.forEach((letter, i) => {
-        if (status[i] !== 'correct' && !VOWELS.includes(letter) && wordArr.includes(letter)) {
-            status[i] = 'present';
-            wordArr[wordArr.indexOf(letter)] = null;
+        if (status[i] !== 'correct') {
+            // NEW LOGIC: In Novomod, we skip vowels for the 'yellow' status.
+            // In standard mode, we process all letters normally.
+            const isVowel = VOWELS.includes(letter);
+            if (!(isNovomod && isVowel) && wordArr.includes(letter)) {
+                status[i] = 'present';
+                wordArr[wordArr.indexOf(letter)] = null;
+            }
         }
     });
 
+    // 3. UI Application
     Array.from(rowElement.children).forEach((tile, i) => {
         const letter = guessArr[i];
         tile.classList.remove('gms-dark-text', 'gms-border-dark');
 
         if (isNovomod && VOWELS.includes(letter)) {
+            // NOVOMOD VOWEL HANDLING
             if (status[i] === 'correct') {
                 tile.classList.add('ns-novo-correct-letter');
                 updateKeyStatus(letter, 'correct');
@@ -273,6 +282,7 @@ function checkGuess(guess, rowElement) {
                 updateKeyStatus(letter, 'novo');
             }
         } else {
+            // STANDARD HANDLING (and Consonants in Novomod)
             if (status[i] === 'correct') {
                 tile.classList.add('ns-matched-letter');
             } else if (status[i] === 'present') {

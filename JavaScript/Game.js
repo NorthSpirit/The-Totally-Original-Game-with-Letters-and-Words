@@ -72,7 +72,7 @@ function createKeyboard() {
             btn.textContent = key;
 
             const widthClass = isSpecial ? 'px-2 sm:px-6 flex-1 max-w-[120px]' : 'w-10 h-12 sm:w-12 sm:h-14';
-            btn.className = `${widthClass} h-14 border-2 gms-border-dark gms-content-bg gms-dark-text font-bold rounded uppercase transition-colors`;
+            btn.className = `${widthClass} ns-button h-14 border-2 gms-border-dark gms-content-bg gms-dark-text font-bold rounded uppercase transition-colors`;
 
             btn.addEventListener('click', () => handleInput(key));
             rowDiv.appendChild(btn);
@@ -131,7 +131,7 @@ function createGrid() {
         const row = document.createElement('div');
         row.className = "flex justify-center gap-1 mb-1";
         for (let j = 0; j < gameSize; j++) {
-            row.innerHTML += `<div class="w-12 h-12 border-2 gms-border-dark flex items-center justify-center text-2xl font-bold uppercase gms-dark-text"></div>`;
+            row.innerHTML += `<div class="w-12 h-12 ns-key gms-border-dark flex items-center justify-center text-2xl font-bold uppercase gms-dark-text"></div>`;
         }
         wordArea.appendChild(row);
     }

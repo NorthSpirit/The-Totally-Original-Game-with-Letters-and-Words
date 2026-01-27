@@ -6,7 +6,7 @@
 
 /* ------------------ Background Colors ------------------ */
 
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@400;700&display=swap');
 
 html,
 body {
@@ -15,9 +15,10 @@ body {
 }
 
 :root {
-    --font-v-offset: 2px; 
-    font-family: 'Press Start 2P', cursive;
-    word-spacing: -60%;
+    font-family: 'Lexend', sans-serif;
+    word-spacing: normal; 
+    letter-spacing: 0.02em;
+    font-weight: bold;
 }
 
 a {
@@ -25,11 +26,11 @@ a {
 }
 
 .gms-primary-bg {
-    background-color: #5875f8;
+    background-color: #37488d;
 }
 
 .gms-dark-bg {
-    background-color: #57449c;
+    background-color: #7683cc;
 }
 
 .gms-content-bg {
@@ -43,19 +44,8 @@ a {
     color: #ffffff;
 }
 
-.ns-key, 
-.WordArea div {
-    padding: 0 !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 1;
-    overflow: hidden;
-    font-size: 1.75rem !important;
-}
-
 .ns-key {
-    border-width: 2px;
+    border-width: 2px !important;
     border-style: solid;
 }
 
@@ -65,9 +55,13 @@ a {
 }
 
 .ns-disabled-letter {
-    background-color: #d38080;
-    border-color: #57449c;
-    color: #ffffff;
+    background-image: 
+        linear-gradient(45deg, transparent 45%, #f36262 45%, #f36262 55%, transparent 55%),
+        linear-gradient(-45deg, transparent 45%, #f36262 45%, #f36262 55%, transparent 55%);
+    
+    background-color: #ffffff;
+    border: 2px solid #f36262;
+    color: #000000;
 }
 
 .ns-existing-letter {
@@ -99,16 +93,7 @@ a {
     border-style: solid !important;
 }
 
-.ns-button {
-    font-size: 1.35rem !important;
-}
 
-button[data-key="ENTER"], 
-button[data-key="BACK"] {
-    padding: 0 !important;
-    font-size: 1.1rem !important; 
-    padding-right: -3px !important; 
-}
 
 /* ------------------ Text Colors ------------------ */
 .gms-light-text {
@@ -116,15 +101,15 @@ button[data-key="BACK"] {
 }
 
 .gms-dark-text {
-    color: #3329c0;
+    color: #121036;
 }
 
 .gms-menu-text {
-    color: #3329c0;
+    color: #121036;
 }
 
 .gms-menu-text:hover {
-    color: #45214d;
+    color: #ffffff;
 }
 
 .gms-main-text {
@@ -132,41 +117,31 @@ button[data-key="BACK"] {
 }
 
 .gms-title-text {
-    color: #ff4f4f;
-    text-shadow:
-        1px 1px 0 #45214d,
-        -1px 1px 0 #45214d,
-        1px -1px 0 #45214d,
-        -1px -1px 0 #45214d;
-}
-
-@media (max-width: 640px) {
-    .gms-title-text {
-        color: #ff4f4f;
-        text-shadow: none;
-    }
+    color: #030408;
 }
 
 .gms-accent-text {
-    color: #ccf5ff;
+    color: #030408;
 }
 
 /* ------------------ Hover Backgrounds ------------------ */
 .gms-hover-bg-light:hover {
-    background-color: #ff4f4f;
+    background-color: #030408;
+    border-color: #e7f3ff;
 }
 
 .ns-hover-bg-dark:hover {
-    background-color: #43337D;
+    background-color: #030408;
+    border-color: #e7f3ff;
 }
 
 /* ------------------ Borders ------------------ */
 .gms-border-dark {
-    border-color: #57449c;
+    border-color: #030408;
 }
 
 .gms-border-medium {
-    border-color: #5875f8;
+    border-color: #030408;
 }
 
 /* ------------------ Keyframes ------------------ */

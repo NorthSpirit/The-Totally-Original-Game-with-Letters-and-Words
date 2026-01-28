@@ -12,6 +12,10 @@ let currentTile = 0;
 let guessedLetters = [];
 let gameIsOver = false;
 
+//Semi-randomization function for seeds, Hs are random constants/magic numbers.
+//Function itterates through every char of from the string, parsed from seed input from the game screen
+//And returns them as a 32 bit integer >>> 0 helps avoid shenanigans, by keeping number positive, by keeping last bit for number, rather than sign
+//Since you will forget, imul is an integer multiplication in JS and ^ is an XOR operator (one or another, 1 + 0 = 1, 0 + 1 = 1, 0 + 0 = 0, 1 + 1 = 0)
 function cyrb128(str) {
     let h1 = 1779033703, h2 = 2557971541, h3 = 3574430938, h4 = 3926077512;
     for (let i = 0, k; i < str.length; i++) {
@@ -24,6 +28,11 @@ function cyrb128(str) {
     return [h1 >>> 0, h2 >>> 0, h3 >>> 0, h4 >>> 0];
 }
 
+//Loads the word list, based on seed by cyrb128, based on leftover number
+//Since seeds are stupid long, unlike word list, it wraps around with modulo (%) until it falls inside the word list and then picks a word
+//Function is async, since it should allow other stuff to happen (keyboard and tile drawing), while word is getting gotten
+//Eventually checks if we got the word, if person wants to cheat with console, so be it...
+//Also, all of the lists have lower case words in them, but gods know if some version me didn't muck it up, so it's all to-upper...
 async function loadWord(gameSize, gameSeed) {
     try {
         const filePath = `WordLists/test_${gameSize}_letters.json`;
@@ -46,6 +55,11 @@ async function loadWord(gameSize, gameSeed) {
     }
 }
 
+//Keyboard creation function, you made after obvious realization, doing this by hand is stupid...
+//Lists all the possible keys first, with final line being adapted between mobile devices and desktop,
+//Because 3rd line gotten too crowded on phone, BACK and ENTER should have been swapped, but by the time you realized, muscle memory was a thing.
+//Other stuff is just your CSS and tailwind classes and event handler injection.
+//Data-key, for example data-key="W", saves private info about the button, preventing need for itterating each time you want to reference a specifi key.
 function createKeyboard() {
     const keyboardContainer = document.getElementById('keyboard');
     if (!keyboardContainer) return;
@@ -89,6 +103,13 @@ function createKeyboard() {
     keyboardContainer.appendChild(buildRow(mobileRow4, "flex md:hidden"));
 }
 
+//Sets up the game, by getting params from url, mainly game size and seed,
+//Size is capped to prevent someone being a smartarse and doing Game.html?size=9001&seed=now
+//Novomod = no no vowels mode, which obscufates information about vowels, unless they are in the correct space
+//It is mainly because novowels pestered you to make an 8 letter mode.
+//Seed is either now, a current date, random or a specific input
+//Afterwards it just gets the seed, creates grid and keyboard
+//If size parsing fails, it just defaults to 5, because your first word list was 5.
 async function initializeGame() {
     const params = new URLSearchParams(window.location.search);
 
@@ -120,6 +141,11 @@ async function initializeGame() {
     createKeyboard();
 }
 
+//Just a function to draw the grid
+//Originally attempts had to be word lenght + 1, but 4 letter word version ended up being impossible,
+//It's still hard, but doable with some luck
+//If WordArea doesn't exist, it just quits, instead of crashing, even if it makes little difference
+//Cause the game is unplayable anyhow.
 function createGrid() {
     const wordArea = document.querySelector('.WordArea');
     if (!wordArea) return;
@@ -137,6 +163,10 @@ function createGrid() {
     }
 }
 
+//Little function to check, what was inputed, 
+//For safety, it turns all the inputs to upper
+//No real safety check for other inputs, but it was never drawn anyhow, so we're good.
+//Backspace check exists for keyboard, even if it's not a drawn key.
 function handleInput(key) {
     if (gameIsOver) return;
 
@@ -151,6 +181,9 @@ function handleInput(key) {
     }
 }
 
+//Adds a letter to the square and pushes current tile (to be interacted with) by 1
+//If prevents going overboard.
+//Row is picked from DOM, by getting it word area, specific tile is further gotten as a child from row
 function addLetter(letter) {
     if (currentTile < gameSize) {
         const rows = document.querySelector('.WordArea').children;
@@ -161,6 +194,9 @@ function addLetter(letter) {
     }
 }
 
+//Removes the letter from the square and pushed current tile back by 1
+//If prevents it going back to the start of time
+//Text is "replaced" with nothingness and custom class is removed too.
 function removeLetter() {
     if (currentTile > 0) {
         currentTile--;
@@ -171,6 +207,11 @@ function removeLetter() {
     }
 }
 
+//Function to prevent the game from forgetting the correct letters/keys,
+//by setting their status
+//If letter already "correct" is it above all else and doesn't get changed
+//If letter is "present" is can become correct, but can't become non-present
+//No need for absent check, cause absent either keeps being absert or gets changed
 function updateKeyStatus(letter, status) {
     const existing = guessedLetters.find(item => item.letter === letter);
     if (!existing) {
@@ -181,6 +222,9 @@ function updateKeyStatus(letter, status) {
     }
 }
 
+//Makes the window of end of the game to pop up and adjusts the text based if it is a victory or defeat.
+//Close button just hides the thing, share gives a discord-able string
+//Hiding again is good enough, cause changing seed reloads the page anyhow
 function showEndScreen(isWin) {
     const modal = document.getElementById('game-modal');
     const title = document.getElementById('modal-title');
@@ -197,14 +241,24 @@ function showEndScreen(isWin) {
     document.getElementById('close-modal').onclick = () => modal.classList.add('hidden');
 }
 
+//A function to submit a guess (after enter)
+//First checks if the input was long enough in the first place and shakes a no-no shake if it's not
+//Then creates an empty guess string and adds letters from the tiles onto it
+//After that, checks if the word guessed exists in the word lists (since you went mental, they probably do)
+//No-no shake if they don't
+//Small delay exists for person to look at the correct squares
 function submitGuess() {
-    if (currentTile !== gameSize) {
-        console.log("Word too short!");
-        return;
-    }
-
     const rows = document.querySelector('.WordArea').children;
     const currentRowElement = rows[currentRow];
+
+    if (currentTile !== gameSize) {
+        console.log("Word too short!");
+        currentRowElement.classList.add('ns-animate-shake');
+        setTimeout(() => {
+            currentRowElement.classList.remove('ns-animate-shake');
+        }, 1500);
+        return;
+    }
 
     let guess = "";
     for (let tile of currentRowElement.children) {
@@ -229,6 +283,7 @@ function submitGuess() {
 
     const totalAttempts = (gameSize === 4) ? 6 : (gameSize + 1);
 
+    //If word is a match, shows the good version of end screen, if it's not, bad and if it's not a game over, row gets moved down and game continues
     if (guess === gameWord) {
         gameIsOver = true;
         setTimeout(() => showEndScreen(true), 100);
@@ -300,25 +355,43 @@ function updateKeyboardUI() {
         const keyBtn = document.querySelector(`button[data-key="${item.letter}"]`);
         if (!keyBtn) return;
 
-        if (isNovomod && VOWELS.includes(item.letter)) {
-            keyBtn.classList.add('ns-novo-letter');
-            return;
+        // 1. Scrub ALL possible status classes to prevent "class soup"
+        keyBtn.classList.remove(
+            'gms-content-bg', 
+            'gms-dark-text', 
+            'ns-matched-letter', 
+            'ns-existing-letter', 
+            'ns-disabled-letter', 
+            'ns-text-white',
+            'ns-novo-letter',
+            'ns-novo-correct-letter'
+        );
+
+        const isVowel = VOWELS.includes(item.letter);
+
+        // 2. Handle Novomod Special Vowel Logic
+        if (isNovomod && isVowel) {
+            if (item.status === 'correct') {
+                keyBtn.classList.add('ns-novo-correct-letter');
+            } else {
+                // In Novomod, once a vowel is guessed, it stays in 'novo' status 
+                // unless it hits the 'correct' status.
+                keyBtn.classList.add('ns-novo-letter');
+            }
+            return; // Exit for vowels in Novomod
         }
 
-        keyBtn.classList.remove('gms-content-bg', 'gms-dark-text');
-
+        // 3. Handle Standard Mode & Consonants
         if (item.status === 'correct') {
             keyBtn.classList.add('ns-matched-letter');
-            keyBtn.classList.remove('ns-existing-letter', 'ns-disabled-letter', 'ns-text-white');
-        } else if (item.status === 'present') {
-            if (!keyBtn.classList.contains('ns-matched-letter')) {
-                keyBtn.classList.add('ns-existing-letter');
-                keyBtn.classList.remove('ns-disabled-letter', 'ns-text-white');
-            }
-        } else if (item.status === 'absent') {
-            if (!keyBtn.classList.contains('ns-matched-letter') && !keyBtn.classList.contains('ns-existing-letter')) {
-                keyBtn.classList.add('ns-disabled-letter', 'ns-text-white');
-            }
+        } 
+        else if (item.status === 'present') {
+            // Only apply 'present' if it hasn't already been marked 'correct' 
+            // (Standard logic for keys like the 'E' in 'TREES')
+            keyBtn.classList.add('ns-existing-letter');
+        } 
+        else if (item.status === 'absent') {
+            keyBtn.classList.add('ns-disabled-letter', 'ns-text-white');
         }
     });
 }

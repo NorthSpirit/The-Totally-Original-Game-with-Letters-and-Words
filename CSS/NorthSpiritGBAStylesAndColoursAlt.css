@@ -16,7 +16,7 @@ body {
 
 :root {
     font-family: 'Lexend', sans-serif;
-    word-spacing: normal; 
+    word-spacing: normal;
     letter-spacing: 0.02em;
     font-weight: bold;
 }
@@ -30,7 +30,7 @@ a {
 }
 
 .gms-dark-bg {
-    background-color: #7683cc;
+    background-color: #9eccfa;
 }
 
 .gms-content-bg {
@@ -44,6 +44,17 @@ a {
     color: #ffffff;
 }
 
+.ns-key,
+.WordArea div {
+    padding: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    overflow: hidden;
+    font-size: 2.75rem !important;
+}
+
 .ns-key {
     border-width: 2px !important;
     border-style: solid;
@@ -55,37 +66,41 @@ a {
 }
 
 .ns-disabled-letter {
-    background-image: 
+    background-image:
         linear-gradient(45deg, transparent 45%, #f36262 45%, #f36262 55%, transparent 55%),
         linear-gradient(-45deg, transparent 45%, #f36262 45%, #f36262 55%, transparent 55%);
-    
+
     background-color: #ffffff;
     border: 2px solid #f36262;
     color: #000000;
 }
 
 .ns-existing-letter {
-    background-color: #f5e174;
-    border-color: #1b1c70;
-    color: #1b1c70;
+    background-color: #ffffff;
+    border-left-width: 6px !important;
+    border-right-width: 6px !important;
+    border-color: #b88700;
+    color: #000000;
 }
 
 .ns-matched-letter {
-    background-color: #9ef051;
-    border-color: #1b1c70;
-    color: #1b1c70;
+    background-color: #000000 !important;
+    color: #ffffff !important;
+    border: 5px solid #40bd34 !important;
 }
 
 .ns-novo-letter {
-    background-color: #51ddf0;
+    background-color: #ffffff;
+    border-left-width: 6px !important;
+    border-right-width: 6px !important;
     border-color: #1b1c70;
-    color: #1b1c70;
+    color: #000000;
 }
 
 .ns-novo-correct-letter {
-    background-color: #1b1c70;
-    border-color: #51ddf0;
-    color: #51ddf0;
+    background-color: #000000 !important;
+    color: #ffffff !important;
+    border: 5px solid #51ddf0 !important;
 }
 
 .ns-tile-input {
@@ -93,7 +108,16 @@ a {
     border-style: solid !important;
 }
 
+.ns-button {
+    font-size: 2rem !important;
+}
 
+button[data-key="ENTER"],
+button[data-key="BACK"] {
+    padding: 0 !important;
+    font-size: 1.7rem !important;
+    padding-right: -3px !important;
+}
 
 /* ------------------ Text Colors ------------------ */
 .gms-light-text {
@@ -182,4 +206,14 @@ a {
 
 .ns-animate-shake {
     animation: denyshake 0.5s cubic-bezier(.36, .07, .19, .97) both;
+}
+
+#menu-toggle:hover #menu-text {
+    color: #ffffff !important;
+}
+
+/*------------------- MISC ---------------------*/
+
+.ns-modal-frame {
+    border: 8px solid #030408;
 }

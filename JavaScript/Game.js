@@ -12,6 +12,15 @@ let currentTile = 0;
 let guessedLetters = [];
 let gameIsOver = false;
 
+//A single source of truth for attempts, to prevent me from derping.
+//On 4 letter words, 5 attempts were too little.
+//On Novomod, couldn't decide how many it should be and swapped it a few times, for now it's 9.
+function getMaxAttempts(size) {
+    if (size === 4) return 6;
+    if (size === 8) return 9;
+    return size + 1; 
+}
+
 //Semi-randomization function for seeds, Hs are random constants/magic numbers.
 //Function itterates through every char of from the string, parsed from seed input from the game screen
 //And returns them as a 32 bit integer >>> 0 helps avoid shenanigans, by keeping number positive, by keeping last bit for number, rather than sign
@@ -151,7 +160,7 @@ function createGrid() {
     if (!wordArea) return;
     wordArea.innerHTML = '';
 
-    const attempts = (gameSize === 4) ? 6 : (gameSize + 1);
+    const attempts = getMaxAttempts(gameSize);
 
     for (let i = 0; i < attempts; i++) {
         const row = document.createElement('div');
@@ -398,7 +407,7 @@ function updateKeyboardUI() {
 
 function shareResults() {
     const rows = document.querySelector('.WordArea').children;
-    const totalAttempts = (gameSize === 8) ? 8 : (gameSize === 4 ? 6 : gameSize + 1);
+    const totalAttempts = getMaxAttempts(gameSize);
     let emojiGrid = `TTOGWLAW - Seed: ${gameSeed} (${currentRow + 1}/${totalAttempts})\n\n`;
 
     for (let i = 0; i <= currentRow; i++) {

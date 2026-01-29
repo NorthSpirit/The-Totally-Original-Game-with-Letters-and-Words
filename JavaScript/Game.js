@@ -1,15 +1,42 @@
+//Pratarmė/Preface
+//Broliai seserys, imkit mane ir skaitykit
+//Ir tatai skaitydami permanykit
+//Cha, most of you won't get the 2nd and 3rd lines...
+//Truth be told, this is my first "REAL" JS project and also, I am not sure, for whom I write the comments.
+//This git is publically available for everyone, but at the same time, I adress myself, even tho, it's not in Lithuanian.
+//I guess, if you'll stumble upon this, you might enjoy the explanations, even if it's probably 1/3rd of the document.
+//I would say, main lesson learned from all of this is Cyrb128 if talking about technical stuff, and the "bitter" lesson if not
+//Bitter lesson being - Don't make something you won't personally enjoy or get paid for making.
+//But even then, a few friends of mine, even if small handful, do enjoy this once in a blue moon.
+//Also, tip for the next time USE THE FUCKING ENUMS!
+
+//Game size is the size of the game, gotten from url size=5
 let gameSize;
+
+//Seed is seed, gotten from &seed=now part of the url, which goes after size, with a few of them being hardcoded
+//Those being quick and random for random seed and now for seed based on a date, check initializeGame.
 let gameSeed;
+
+//Word gotten from the list of words, which will be referenced until the game ends, like 'Banana' or 'Larksome'
 let gameWord;
+
+//One of the word lists, loaded based on game size, held once, so it wouldn't have to be loaded each time it is needed
 let fullWordList = []
+
+//Special game mode, because I didn't want to have 8 letter words to begin with, so decided to make it more special, vowels are needed for the said mode
 let isNovomod = false;
 const VOWELS = ['A', 'E', 'I', 'O', 'U'];
 
 /*-----------------*/
 
+//Variabls needed for the game logic itself, row is obviously row, tile is tile in siad row
 let currentRow = 0;
 let currentTile = 0;
+
+//Guessed letters is an array to hold letters and their status, for example Letter A, with status of "present"
 let guessedLetters = [];
+
+//A helper bool to check if the game is done and done
 let gameIsOver = false;
 
 //A single source of truth for attempts, to prevent me from derping.
@@ -305,6 +332,10 @@ function submitGuess() {
     }
 }
 
+//Logic to check the guess by matching letters first and then words against list and picked word
+//First goes around the word, checks if the letters are matching to mark them as correct.
+//After that checks for letters, which at least exists (with different logic for novomod)
+//After statuses are matched, it applies/removes/adds classes, with once again, some logic differences for novomod
 function checkGuess(guess, rowElement) {
     const wordArr = gameWord.split('');
     const guessArr = guess.split('');
@@ -321,7 +352,7 @@ function checkGuess(guess, rowElement) {
     // 2. Pass: Identify Present Letters (Yellow logic)
     guessArr.forEach((letter, i) => {
         if (status[i] !== 'correct') {
-            // NEW LOGIC: In Novomod, we skip vowels for the 'yellow' status.
+            //In Novomod, we skip vowels for the 'yellow' status.
             // In standard mode, we process all letters normally.
             const isVowel = VOWELS.includes(letter);
             if (!(isNovomod && isVowel) && wordArr.includes(letter)) {
@@ -337,7 +368,7 @@ function checkGuess(guess, rowElement) {
         tile.classList.remove('gms-dark-text', 'gms-border-dark');
 
         if (isNovomod && VOWELS.includes(letter)) {
-            // NOVOMOD VOWEL HANDLING
+            // NOVOMOD VOWEL HANDLING for less information
             if (status[i] === 'correct') {
                 tile.classList.add('ns-novo-correct-letter');
                 updateKeyStatus(letter, 'correct');
@@ -359,6 +390,9 @@ function checkGuess(guess, rowElement) {
     });
 }
 
+//As it says, function to update the keybaord UI
+//First scrapes all the classes, related to letters
+//Then applies them according the the conditions, checking if it's novomod or normal
 function updateKeyboardUI() {
     guessedLetters.forEach(item => {
         const keyBtn = document.querySelector(`button[data-key="${item.letter}"]`);
@@ -383,8 +417,8 @@ function updateKeyboardUI() {
             if (item.status === 'correct') {
                 keyBtn.classList.add('ns-novo-correct-letter');
             } else {
-                // In Novomod, once a vowel is guessed, it stays in 'novo' status 
-                // unless it hits the 'correct' status.
+                // In Novomod, once a vowel is guessed, it stays in 'blue' status 
+                // unless it hits the 'correct' status... tho, it's still blue, just different blue...
                 keyBtn.classList.add('ns-novo-letter');
             }
             return; // Exit for vowels in Novomod
@@ -405,9 +439,18 @@ function updateKeyboardUI() {
     });
 }
 
+//Function, which primary function is... bragging... obviously...
+//Like, if you fail, I'm sure as hell, you ain't sharing that...
+//Anyhow, gets all the rows from wordarea div and the attempts and forms a string
+//Applying a square, based on status from all the rows of the game.
+//Logic on phones/mobile devices differ, because TNP complained about windows also doing the navigator thing on his windows and it's annoying...
+//I wonder if in the future, there will be something different, other than android/Istuff.
+//Share = the fancy stuff with social networks and all that jazz, clipboard is copy-paste.
 function shareResults() {
     const rows = document.querySelector('.WordArea').children;
     const totalAttempts = getMaxAttempts(gameSize);
+    //String logic example: TTOGWLAW - Seed: 7L53NVJ (1/9)
+    //Or in words TTOGWLAW = Game name, seed is obviously seed, then speicific seed (attempts it too you/total attempts)
     let emojiGrid = `TTOGWLAW - Seed: ${gameSeed} (${currentRow + 1}/${totalAttempts})\n\n`;
 
     for (let i = 0; i <= currentRow; i++) {
@@ -439,6 +482,7 @@ function shareResults() {
         emojiGrid += rowEmojis + "\n";
     }
 
+    //If anything will need updating, I kinda suspect, it's this...
     const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
     if (isMobile && navigator.share) {
@@ -453,6 +497,7 @@ function shareResults() {
             const feedbackClass = isNovomod ? 'ns-novo-correct-letter' : 'ns-matched-letter';
             btn.classList.replace('gms-primary-bg', feedbackClass);
 
+            //Reverts button back from copied after 2 seconds
             setTimeout(() => {
                 btn.textContent = originalText;
                 btn.classList.replace(feedbackClass, 'gms-primary-bg');
@@ -463,11 +508,23 @@ function shareResults() {
     }
 }
 
+//For the sake of TNP, I also added the keyboard support, even if I suspect, this might not be optimal, it was a handful of minutes implementation
+//Checks, what was pushed, if it was was letter, it is treated as a letter, if it's back or backspace, it's back.
+//After doing the logic, is also adds a "pushed in" button feeling for a blink of a second.
 document.addEventListener('keydown', (e) => {
+    //This checks, if the person actually tries to put stuff into designated input area, for example, seed field.
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
     let key = e.key.toUpperCase();
 
+    //This is to fix the annoyign thing, where you would click on a letter or backspace via mouse and then click enter
+    //Before this, clicking enter would try to send the answer and then apply the last thing clicked with mouse
+    //Tho, it feels like it was more of an issue on local copy, rather than GIT IO one, for some reason.
+    if (key === 'ENTER') {
+        e.preventDefault(); 
+    }
+
+    //This stays as it is, because BACK is a magic string, so don't do this, but let's call this a sunken cost...
     if (key === 'BACKSPACE') key = 'BACK';
 
 
@@ -482,6 +539,7 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
+//Loads up the game, gets the buttons, the seed field and handles the buttons themselves
 document.addEventListener('DOMContentLoaded', () => {
     initializeGame();
 
@@ -489,13 +547,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const randomBtn = document.getElementById('random-game');
     const seedInput = document.getElementById('seed-input');
 
+    //Handles the Seed 'n Go! button (applies the seed from t)
     if (startBtn) {
         startBtn.addEventListener('click', () => {
             const newSeed = seedInput.value.trim() || 'now';
+            //Handles the URL, parses the size and seed, size shenanigans are handled way way above in initializeGame
             window.location.href = `Game.html?size=${gameSize}&seed=${encodeURIComponent(newSeed)}`;
         });
     }
 
+    //Handles the randomization button (I think, it is currently named Randomly!, but I might have renamed it again...)
+    //Renaming things every 4 days is a sign of a great developer, kids!
     if (randomBtn) {
         randomBtn.addEventListener('click', () => {
             window.location.href = `Game.html?size=${gameSize}&seed=random`;

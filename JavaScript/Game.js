@@ -45,7 +45,7 @@ let gameIsOver = false;
 function getMaxAttempts(size) {
     if (size === 4) return 6;
     if (size === 8) return 9;
-    return size + 1; 
+    return size + 1;
 }
 
 //Semi-randomization function for seeds, Hs are random constants/magic numbers.
@@ -390,6 +390,8 @@ function checkGuess(guess, rowElement) {
     });
 }
 
+
+/*
 //As it says, function to update the keybaord UI
 //First scrapes all the classes, related to letters
 //Then applies them according the the conditions, checking if it's novomod or normal
@@ -400,11 +402,11 @@ function updateKeyboardUI() {
 
         // 1. Scrub ALL possible status classes to prevent "class soup"
         keyBtn.classList.remove(
-            'gms-content-bg', 
-            'gms-dark-text', 
-            'ns-matched-letter', 
-            'ns-existing-letter', 
-            'ns-disabled-letter', 
+            'gms-content-bg',
+            'gms-dark-text',
+            'ns-matched-letter',
+            'ns-existing-letter',
+            'ns-disabled-letter',
             'ns-text-white',
             'ns-novo-letter',
             'ns-novo-correct-letter'
@@ -427,15 +429,69 @@ function updateKeyboardUI() {
         // 3. Handle Standard Mode & Consonants
         if (item.status === 'correct') {
             keyBtn.classList.add('ns-matched-letter');
-        } 
+        }
         else if (item.status === 'present') {
             // Only apply 'present' if it hasn't already been marked 'correct' 
             // (Standard logic for keys like the 'E' in 'TREES')
             keyBtn.classList.add('ns-existing-letter');
-        } 
+        }
         else if (item.status === 'absent') {
             keyBtn.classList.add('ns-disabled-letter', 'ns-text-white');
         }
+    });
+}
+*/
+
+//As it says, function to update the keybaord UI
+//First scrapes all the classes, related to letters
+//Then applies them according the the conditions, checking if it's novomod or normal
+function updateKeyboardUI() {
+    guessedLetters.forEach(item => {
+
+        //querySelectorAll to catch both Desktop and Mobile versions of the keys, one of the last bugs of the project...
+        const keyBtns = document.querySelectorAll(`button[data-key="${item.letter}"]`);
+        if (keyBtns.length === 0) return;
+
+        // 1. Scrub ALL possible status classes to prevent "class soup"
+        keyBtns.forEach(keyBtn => {
+            keyBtn.classList.remove(
+                'gms-content-bg',
+                'gms-dark-text',
+                'ns-matched-letter',
+                'ns-existing-letter',
+                'ns-disabled-letter',
+                'ns-text-white',
+                'ns-novo-letter',
+                'ns-novo-correct-letter'
+            );
+
+            const isVowel = VOWELS.includes(item.letter);
+
+            // 2. Handle Novomod Special Vowel Logic
+            if (isNovomod && isVowel) {
+                if (item.status === 'correct') {
+                    keyBtn.classList.add('ns-novo-correct-letter');
+                } else {
+                    // In Novomod, once a vowel is guessed, it stays in 'blue' status 
+                    // unless it hits the 'correct' status... tho, it's still blue, just different blue...
+                    keyBtn.classList.add('ns-novo-letter');
+                }
+                return; // Exit for vowels in Novomod
+            }
+
+            // 3. Handle Standard Mode & Consonants
+            if (item.status === 'correct') {
+                keyBtn.classList.add('ns-matched-letter');
+            }
+            else if (item.status === 'present') {
+                // Only apply 'present' if it hasn't already been marked 'correct' 
+                // (Standard logic for keys like the 'E' in 'TREES')
+                keyBtn.classList.add('ns-existing-letter');
+            }
+            else if (item.status === 'absent') {
+                keyBtn.classList.add('ns-disabled-letter', 'ns-text-white');
+            }
+        });
     });
 }
 
@@ -461,19 +517,19 @@ function shareResults() {
             // Priority 1: Correct Vowel (Purple)
             if (tile.classList.contains('ns-novo-correct-letter')) {
                 rowEmojis += "🟪";
-            } 
+            }
             // Priority 2: Generic Vowel (Blue)
             else if (tile.classList.contains('ns-novo-letter')) {
                 rowEmojis += "🟦";
-            } 
+            }
             // Priority 3: Correct Consonant (Green)
             else if (tile.classList.contains('ns-matched-letter')) {
                 rowEmojis += "🟩";
-            } 
+            }
             // Priority 4: Existing Consonant (Yellow)
             else if (tile.classList.contains('ns-existing-letter')) {
                 rowEmojis += "🟨";
-            } 
+            }
             // Priority 5: Absent / Wrong (Black)
             else {
                 rowEmojis += "⬛";
@@ -521,7 +577,7 @@ document.addEventListener('keydown', (e) => {
     //Before this, clicking enter would try to send the answer and then apply the last thing clicked with mouse
     //Tho, it feels like it was more of an issue on local copy, rather than GIT IO one, for some reason.
     if (key === 'ENTER') {
-        e.preventDefault(); 
+        e.preventDefault();
     }
 
     //This stays as it is, because BACK is a magic string, so don't do this, but let's call this a sunken cost...
@@ -530,13 +586,13 @@ document.addEventListener('keydown', (e) => {
 
     handleInput(key);
 
-    const visualKey = document.querySelector(`button[data-key="${key}"]`);
-    if (visualKey) {
+    const visualKeys = document.querySelectorAll(`button[data-key="${key}"]`);
+    visualKeys.forEach(visualKey => {
         visualKey.classList.add('opacity-50', 'scale-95');
         setTimeout(() => {
             visualKey.classList.remove('opacity-50', 'scale-95');
         }, 100);
-    }
+    })
 });
 
 //Loads up the game, gets the buttons, the seed field and handles the buttons themselves
